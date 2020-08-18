@@ -146,12 +146,13 @@ fun <P : Parser, Type : AstParserType> antlrKotlinParser(
                 if (token.type != -1) {
                     stream.consume()
                 }
+                val tokenPositionInfo = TokenPositionInfo(
+                    token.line,
+                    token.charPositionInLine,
+                    token.startIndex, token.stopIndex
+                )
                 DefaultAstTerminal(
-                    tokenNames[token.type] ?: "", token.text ?: "", channels[token.channel], TokenHolder(
-                        token.line,
-                        token.charPositionInLine,
-                        token.startIndex, token.stopIndex
-                    )
+                    tokenNames[token.type] ?: "", token.text ?: "", channels[token.channel], tokenPositionInfo
                 )
             }
         } else {
