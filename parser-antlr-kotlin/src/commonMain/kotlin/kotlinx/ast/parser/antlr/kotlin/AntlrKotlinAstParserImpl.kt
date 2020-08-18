@@ -33,7 +33,13 @@ private class AntlrKotlinAstParserImpl(
                 null
         } ?: "<Invalid>"
         val channel = channels[token.channel]
-        return DefaultAstTerminal(name, text, channel)
+        return DefaultAstTerminal(
+            name, text, channel, TokenHolder(
+                token.line,
+                token.charPositionInLine,
+                token.startIndex, token.stopIndex
+            )
+        )
     }
 
     private fun hiddenTokens(node: ParseTree, start: Boolean): List<AstTerminal> {
@@ -139,7 +145,13 @@ fun <P : Parser, Type : AstParserType> antlrKotlinParser(
                 if (token.type != -1) {
                     stream.consume()
                 }
-                DefaultAstTerminal(tokenNames[token.type] ?: "", token.text ?: "", channels[token.channel])
+                DefaultAstTerminal(
+                    tokenNames[token.type] ?: "", token.text ?: "", channels[token.channel], TokenHolder(
+                        token.line,
+                        token.charPositionInLine,
+                        token.startIndex, token.stopIndex
+                    )
+                )
             }
         } else {
             astParser.parse(extractor.extract(parser, type)).join()

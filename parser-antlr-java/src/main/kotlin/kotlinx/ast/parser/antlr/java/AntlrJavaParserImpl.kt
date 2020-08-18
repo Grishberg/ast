@@ -3,10 +3,7 @@ package kotlinx.ast.parser.antlr.java
 import kotlinx.ast.common.AstChannel
 import kotlinx.ast.common.AstParserType
 import kotlinx.ast.common.AstSource
-import kotlinx.ast.common.ast.Ast
-import kotlinx.ast.common.ast.AstTerminal
-import kotlinx.ast.common.ast.DefaultAstNode
-import kotlinx.ast.common.ast.DefaultAstTerminal
+import kotlinx.ast.common.ast.*
 import kotlinx.ast.common.impl.AstList
 import kotlinx.ast.common.impl.flatten
 import org.antlr.v4.runtime.*
@@ -26,7 +23,15 @@ private class AntlrJavaParserImpl(
         val text = token.text ?: throw RuntimeException()
         val name = if (token.type == -1) "EOF" else tokenNames[token.type] ?: "<Invalid>"
         val channel = channels[token.channel]
-        return DefaultAstTerminal(name, text, channel)
+        return DefaultAstTerminal(
+            name, text, channel,
+            TokenPositionInfo(
+                token.line,
+                token.charPositionInLine,
+                token.startIndex,
+                token.stopIndex
+            )
+        )
     }
 
     private fun hiddenTokens(node: ParseTree, start: Boolean): List<AstTerminal> {
@@ -132,7 +137,13 @@ fun <P : Parser, Type : AstParserType> antlrKotlinParser(
                 if (token.type != -1) {
                     stream.consume()
                 }
-                DefaultAstTerminal(tokenNames[token.type] ?: "", token.text ?: "", channels[token.channel])
+                DefaultAstTerminal(
+                    tokenNames[token.type] ?: "", token.text ?: "", channels[token.channel], TokenPositionInfo(
+                        token.line,
+                        token.charPositionInLine,
+                        token.startIndex, token.stopIndex
+                    )
+                )
             }
         } else {
             astParser.parse(extractor.extract(parser, type)).join()

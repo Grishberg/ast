@@ -5,6 +5,7 @@ import kotlinx.ast.common.ast.Ast
 import kotlinx.ast.common.ast.AstNode
 import kotlinx.ast.common.ast.DefaultAstNode
 import kotlinx.ast.common.ast.DefaultAstTerminal
+import kotlinx.ast.common.ast.TokenPositionInfo
 import kotlinx.ast.grammar.kotlin.common.KotlinGrammarAstChannels
 
 internal fun terminal(
@@ -12,7 +13,14 @@ internal fun terminal(
     text: String,
     channel: AstChannel = KotlinGrammarAstChannels.default
 ): DefaultAstTerminal {
-    return DefaultAstTerminal(name, text, channel)
+    return DefaultAstTerminal(
+        name, text, channel, TokenPositionInfo(
+            -1,
+            -1,
+            -1,
+            -1
+        )
+    )
 }
 
 internal fun node(name: String, children: List<Ast>): AstNode {
