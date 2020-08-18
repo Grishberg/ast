@@ -7,6 +7,7 @@ import kotlinx.ast.common.ast.Ast
 import kotlinx.ast.common.ast.AstTerminal
 import kotlinx.ast.common.ast.DefaultAstNode
 import kotlinx.ast.common.ast.DefaultAstTerminal
+import kotlinx.ast.common.ast.TokenPositionInfo
 import kotlinx.ast.common.impl.AstList
 import kotlinx.ast.common.impl.flatten
 import org.antlr.v4.kotlinruntime.*
@@ -34,7 +35,7 @@ private class AntlrKotlinAstParserImpl(
         } ?: "<Invalid>"
         val channel = channels[token.channel]
         return DefaultAstTerminal(
-            name, text, channel, TokenHolder(
+            name, text, channel, TokenPositionInfo(
                 token.line,
                 token.charPositionInLine,
                 token.startIndex, token.stopIndex
