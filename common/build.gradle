@@ -1,19 +1,18 @@
 plugins {
-    kotlin("multiplatform")
-    `maven-publish`
+    id "org.jetbrains.kotlin.multiplatform"
+    id 'maven-publish'
 }
-
 kotlin {
     jvm()
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(kotlin("stdlib-common"))
             }
         }
 
-        val jvmMain by getting {
+        jvmMain {
             dependencies {
                 api(kotlin("stdlib-jdk8"))
             }
